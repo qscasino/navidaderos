@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Updated title for Club EROS -->
+  <title>Club EROS — Calendario de Adviento</title>
+  
+  <!-- Updated fonts to Club EROS fonts: Cinzel, Inter, Teko -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600&family=Teko:wght@500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Updated CSS variables to Club EROS color palette */
+    :root {
+      --gold: #D4AF37;
+      --gold-dark: #B4902F;
+      --gold-soft: #F1D27A;
+      --gold-accent: #FFEAA7;
+
+      --bordeaux: #1E0B10;
+      --bordeaux-soft: #2B0F16;
+      --bordeaux-deep: #4A1520;
+
+      --cream: #FFF8F0;
+      --white: #FFFFFF;
+
+      --ff-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --ff-display: 'Cinzel', serif;
+      --ff-ui: 'Teko', sans-serif;
+    }
+
+    body {
+      /* Updated font family and background to EROS style */
+      font-family: var(--ff-body);
+      background: 
+        radial-gradient(1200px 700px at 50% -10%, rgba(212,175,55,.12), transparent 60%),
+        radial-gradient(900px 600px at 80% 100%, rgba(212,175,55,.08), transparent 60%),
+        linear-gradient(135deg, var(--bordeaux) 0%, var(--bordeaux-soft) 55%, var(--bordeaux-deep) 100%);
+      min-height: 100vh;
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+      letter-spacing: .1px;
+      line-height: 1.6;
+    }
+
+    /* Preloader */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* Updated preloader background to EROS style */
+      background: linear-gradient(135deg, var(--bordeaux) 0%, var(--bordeaux-soft) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .preloader-logo {
+      max-width: 220px;
+      margin-bottom: 30px;
+      animation: logoFloat 2.5s ease-in-out infinite;
+      /* Updated drop shadow to gold */
+      filter: drop-shadow(0 10px 30px rgba(212,175,55,.35));
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    .progress-bar-container {
+      width: 280px;
+      height: 4px;
+      /* Updated progress bar colors to EROS gold */
+      background: rgba(212,175,55,.2);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+
+    .progress-bar {
+      height: 100%;
+      /* Updated progress bar fill to EROS gold gradient */
+      background: linear-gradient(90deg, var(--gold), var(--gold-soft), var(--gold-accent));
+      background-size: 200% 100%;
+      border-radius: 10px;
+      width: 0%;
+      animation: loadProgress 2s ease-out forwards, shimmerBar 1.5s linear infinite;
+      box-shadow: 0 0 10px rgba(212,175,55,.5);
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes shimmerBar {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .loading-text {
+      margin-top: 10px;
+      /* Updated loading text color and font */
+      color: var(--gold-soft);
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-align: center;
+    }
+
+    /* Partículas de fondo */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* Updated particle colors to EROS gold tones */
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(212,175,55,0.3), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(212,175,55,0.2), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(241,210,122,0.2), transparent);
+      background-size: 200px 200px, 300px 300px, 250px 250px;
+      animation: particles 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes particles {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      animation: fadeInDown 1s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+      /* Updated logo shadow to gold */
+      filter: drop-shadow(0 4px 20px rgba(212,175,55,.4));
+    }
+
+    /* Added event badge similar to EROS style */
+    .event-badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      font-family: var(--ff-ui);
+      font-size: clamp(.8rem, 2.2vw, .95rem);
+      line-height: 1;
+      letter-spacing: .4px;
+      color: #2A1015;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 20px rgba(212,175,55,.3);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      /* Updated heading to use EROS display font and colors */
+      font-family: var(--ff-display);
+      font-weight: 700;
+      line-height: 1.12;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      margin-bottom: 14px;
+      letter-spacing: .2px;
+      background: linear-gradient(135deg, var(--gold-accent), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      /* Updated subtitle styling to EROS style */
+      max-width: 620px;
+      margin: 0 auto;
+      color: rgba(255,248,240,.92);
+      font-size: clamp(1rem, 2.2vw, 1.1rem);
+    }
+
+    /* Contenedor del árbol */
+    .tree-container {
+      position: relative;
+      max-width: 850px;
+      width: 100%;
+      margin: 0 auto;
+      z-index: 1;
+      animation: fadeInUp 1s ease .25s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tree-svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+    }
+
+    /* Contenedor de cajitas */
+    .boxes-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Cajita individual */
+    .box {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(.4,0,.2,1);
+      pointer-events: all;
+      transform-origin: center;
+    }
+
+    .box:hover:not(.locked) {
+      transform: scale(1.15) translateY(-6px);
+    }
+
+    .box.locked {
+      cursor: not-allowed;
+      opacity: 0.5;
+      filter: grayscale(70%);
+    }
+
+    .box.claimed {
+      opacity: 0.7;
+      filter: brightness(0.8);
+    }
+
+    .box-inner {
+      width: 100%;
+      height: 100%;
+      /* Updated box colors to EROS bordeaux and gold */
+      background: linear-gradient(135deg, #5A1823 0%, #3A0F18 100%);
+      border: 3px solid var(--gold);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 10px 30px rgba(212,175,55,.35),
+        0 0 0 1px rgba(212,175,55,.25),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .box.locked .box-inner {
+      background: linear-gradient(135deg, #4a3428 0%, #2d1f18 100%);
+      border-color: #6b5344;
+    }
+
+    .box.claimed .box-inner {
+      background: linear-gradient(135deg, #7A2A36 0%, #5A1823 100%);
+    }
+
+    .box-number {
+      /* Updated font to EROS UI font */
+      font-family: var(--ff-ui);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: .2px;
+      color: white;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+      z-index: 2;
+    }
+
+    .box.locked .box-number {
+      color: #8b7355;
+    }
+
+    .box-icon {
+      font-size: 1.2rem;
+      position: absolute;
+      bottom: 5px;
+      opacity: 0.6;
+    }
+
+    /* Shine effect */
+    .box:not(.locked):not(.claimed) .box-inner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    /* Updated box positions to match reference images - organized in pyramid rows */
+    /* Row 1: 1 box (estrella) */
+    .box[data-day="1"] { 
+      top: 9%; 
+      left: 50%; 
+      transform: translateX(-50%); 
+    }
+    
+    /* Row 2: 2 boxes - más pegadas al centro */
+    .box[data-day="2"] { 
+      top: 16%; 
+      left: 42%; 
+      margin-right: -15px;
+    }
+    .box[data-day="3"] { 
+      top: 16%; 
+      left: 53%; 
+      margin-left: -15px;
+    }
+    
+    /* Row 3: 3 boxes - distribución uniforme */
+    .box[data-day="4"] { 
+      top: 31%; 
+      left: 37%; 
+      margin-right: -5px;
+    }
+    .box[data-day="5"] { 
+      top: 31%; 
+      left: 50%; 
+      transform: translateX(-50%); 
+    }
+    .box[data-day="6"] { 
+      top: 31%; 
+      left: 57%; 
+      margin-left: -5px;
+    }
+    
+    /* Row 4: 5 boxes - bien espaciadas */
+    .box[data-day="7"] { 
+      top: 48%; 
+      left: 29%; 
+      margin-right: -3px;
+    }
+    .box[data-day="8"] { 
+      top: 48%; 
+      left: 38%; 
+      margin-right: -2px;
+    }
+    .box[data-day="9"] { 
+      top: 48%; 
+      left: 50%; 
+      transform: translateX(-50%); 
+    }
+    .box[data-day="10"] { 
+      top: 48%; 
+      left: 55%; 
+      margin-left: -2px;
+    }
+    .box[data-day="11"] { 
+      top: 48%; 
+      left: 64%; 
+      margin-left: -3px;
+    }
+    
+    /* Row 5: 6 boxes - ajustadas hacia el centro */
+    .box[data-day="12"] { 
+      top: 66%; 
+      left: 26%; 
+      margin-right: -2px;
+    }
+    .box[data-day="13"] { 
+      top: 66%; 
+      left: 34%; 
+      margin-right: -1px;
+    }
+    .box[data-day="14"] { 
+      top: 66%; 
+      left: 42%; 
+      margin-right: -1px;
+    }
+    .box[data-day="15"] { 
+      top: 66%; 
+      left: 51%; 
+      margin-left: -1px;
+    }
+    .box[data-day="16"] { 
+      top: 66%; 
+      left: 59%; 
+      margin-left: -1px;
+    }
+    .box[data-day="17"] { 
+      top: 66%; 
+      left: 67%; 
+      margin-left: -2px;
+    }
+    
+    /* Row 6: 7 boxes - fila más grande */
+    .box[data-day="18"] { 
+      top: 86%; 
+      left: 22%; 
+    }
+    .box[data-day="19"] { 
+      top: 86%; 
+      left: 30%; 
+    }
+    .box[data-day="20"] { 
+      top: 86%; 
+      left: 38%; 
+    }
+    .box[data-day="21"] { 
+      top: 86%; 
+      left: 46%; 
+    }
+    .box[data-day="22"] { 
+      top: 86%; 
+      left: 54%; 
+    }
+    .box[data-day="23"] { 
+      top: 86%; 
+      left: 62%; 
+    }
+    .box[data-day="24"] { 
+      top: 86%; 
+      left: 70%; 
+    }
+    
+    /* Row 7: 1 box grande (día 25 - regalo especial) */
+    .box[data-day="25"] { 
+      top: 93%; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      width: 70px; 
+      height: 70px; 
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      /* Updated modal to EROS styling */
+      background: linear-gradient(135deg, var(--bordeaux-soft) 0%, var(--bordeaux) 100%);
+      border: 2px solid var(--gold);
+      border-radius: 22px;
+      padding: clamp(28px, 6vw, 46px);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      box-shadow: 
+        0 30px 80px rgba(0,0,0,.55),
+        0 0 0 1px rgba(212,175,55,.25),
+        inset 0 1px 0 rgba(255,255,255,.05);
+      animation: modalIn .5s cubic-bezier(.68,-.55,.265,1.55);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.85) translateY(40px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      /* Updated close button to EROS style */
+      background: rgba(212,175,55, 0.2);
+      border: 2px solid var(--gold);
+      color: var(--gold-soft);
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-family: var(--ff-body);
+    }
+
+    .modal-close:hover {
+      background: var(--gold);
+      color: var(--bordeaux);
+      transform: rotate(90deg);
+    }
+
+    .modal-day {
+      /* Updated modal text styling to EROS */
+      font-family: var(--ff-ui);
+      font-size: 1.1rem;
+      color: var(--gold-soft);
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: .3px;
+    }
+
+    .modal-prize {
+      /* Updated prize display to EROS fonts and colors */
+      font-family: var(--ff-display);
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold-accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 20px 0;
+      letter-spacing: .2px;
+    }
+
+    .modal-message {
+      color: rgba(255,248,240,.9);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    /* Added modal button styling similar to EROS */
+    .modal-button {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--white);
+      border: none;
+      padding: 14px 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: transform .2s ease, box-shadow .2s ease;
+      letter-spacing: .2px;
+      box-shadow: 0 10px 30px rgba(212,175,55,.4);
+      font-family: var(--ff-ui);
+      text-transform: uppercase;
+    }
+
+    .modal-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 38px rgba(212,175,55,.5);
+    }
+
+    .modal-button:active {
+      transform: translateY(0);
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      z-index: 9999;
+      will-change: top, left, transform, opacity;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Christmas lights positioned between boxes */
+    .christmas-light {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 10px currentColor;
+      z-index: 0;
+    }
+
+    .christmas-light.red {
+      background: #ff6b6b;
+      color: #ff6b6b;
+      animation: twinkle 1.5s infinite;
+    }
+
+    .christmas-light.yellow {
+      background: #ffe66d;
+      color: #ffe66d;
+      animation: twinkle 2s infinite;
+    }
+
+    .christmas-light.blue {
+      background: #4ecdc4;
+      color: #4ecdc4;
+      animation: twinkle 1.8s infinite;
+    }
+
+    .christmas-light.green {
+      background: #95e1d3;
+      color: #95e1d3;
+      animation: twinkle 2.2s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.3;
+        transform: scale(0.8);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .box {
+        width: 45px;
+        height: 45px;
+      }
+
+      .box[data-day="25"] {
+        width: 55px;
+        height: 55px;
+      }
+
+      .box-number {
+        font-size: 1.3rem;
+      }
+
+      .box-icon {
+        font-size: 1rem;
+      }
+
+      .header {
+        margin-bottom: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .box {
+        width: 35px;
+        height: 35px;
+      }
+
+      .box[data-day="25"] {
+        width: 45px;
+        height: 45px;
+      }
+
+      .box-number {
+        font-size: 1rem;
+      }
+
+      .box-icon {
+        font-size: 0.8rem;
+        bottom: 2px;
+      }
+
+      .modal-content {
+        padding: 30px 20px;
+      }
+
+      .preloader-logo {
+        max-width: 180px;
+      }
+
+      .progress-bar-container {
+        width: 250px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .preloader-logo, .header, .tree-container, .box, .modal-content {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <!-- Updated logo alt text to Club EROS -->
+    <img src="assets/eros-logo.png" alt="Club EROS" class="preloader-logo">
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="loading-text">Cargando calendario...</div>
+  </div>
+
+  <div class="header">
+    <!-- Updated logo reference and alt text to Club EROS -->
+    <img src="assets/eros-logo.png" alt="Club EROS" class="logo" id="logo">
+    <!-- Added event badge and updated title -->
+    <h1>Calendario de Adviento</h1>
+    <p class="subtitle">Celebramos la Navidad con premios exclusivos. Descubrí tu sorpresa dorada cada día.</p>
+  </div>
+
+  <div class="tree-container">
+    <!-- Árbol de Navidad SVG mejorado con más detalles navideños -->
+    <svg class="tree-svg" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradientes para dar profundidad -->
+        <linearGradient id="treeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#3d5a3d;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#2d4a2d;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1d3a1d;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="trunkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#3a2818;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#5a3828;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#3a2818;stop-opacity:1" />
+        </linearGradient>
+        <!-- Updated star gradient to EROS gold tones -->
+        <radialGradient id="starGradient">
+          <stop offset="0%" style="stop-color:#FFEAA7;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#D4AF37;stop-opacity:1" />
+        </radialGradient>
+        <!-- Filtro de brillo para la estrella -->
+        <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      
+      <!-- Sombra del árbol -->
+      <ellipse cx="150" cy="390" rx="140" ry="8" fill="rgba(0,0,0,0.3)" opacity="0.5"/>
+      
+      <!-- Cuerpo del árbol con capas -->
+      <path d="M150 30 L105 90 L125 90 L85 155 L110 155 L70 220 L105 220 L55 295 L110 295 L45 375 L255 375 L190 295 L245 295 L195 220 L230 220 L190 155 L215 155 L175 90 L195 90 Z" 
+            fill="url(#treeGradient)" 
+            stroke="#1a2a1a" 
+            stroke-width="2.5"
+            stroke-linejoin="round"/>
+      
+      <!-- Detalles de luces y nieve en las ramas -->
+      <!-- Nieve en las puntas -->
+      <path d="M150 30 L105 90 L125 90" 
+            fill="none" 
+            stroke="#e8f4f8" 
+            stroke-width="4" 
+            stroke-linecap="round" 
+            opacity="0.6"/>
+      <path d="M85 155 L110 155" 
+            fill="none" 
+            stroke="#e8f4f8" 
+            stroke-width="5" 
+            stroke-linecap="round" 
+            opacity="0.6"/>
+      <path d="M70 220 L105 220" 
+            fill="none" 
+            stroke="#e8f4f8" 
+            stroke-width="5" 
+            stroke-linecap="round" 
+            opacity="0.6"/>
+      
+      <!-- Luces decorativas (círculos pequeños) -->
+      <circle cx="130" cy="110" r="3" fill="#ff6b6b" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="170" cy="120" r="3" fill="#4ecdc4" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="110" cy="170" r="3" fill="#ffe66d" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="190" cy="180" r="3" fill="#ff6b6b" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="90" cy="240" r="3" fill="#4ecdc4" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="210" cy="250" r="3" fill="#ffe66d" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="70" cy="310" r="3" fill="#ff6b6b" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="1.9s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="230" cy="320" r="3" fill="#4ecdc4" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2.1s" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Tronco con gradiente -->
+      <rect x="125" y="375" width="50" height="25" 
+            fill="url(#trunkGradient)" 
+            stroke="#2d1f18" 
+            stroke-width="2"
+            rx="2"/>
+      
+      <!-- Estrella inmóvil con brillo (sin animación rotate) -->
+      <g filter="url(#starGlow)">
+        <path d="M150 8 L156 22 L171 22 L159 31 L164 45 L150 36 L136 45 L141 31 L129 22 L144 22 Z" 
+              fill="url(#starGradient)" 
+              stroke="#D4AF37" 
+              stroke-width="2">
+        </path>
+      </g>
+    </svg>
+
+    <!-- Contenedor de cajitas -->
+    <div class="boxes-container" id="boxesContainer"></div>
+
+    <!-- Christmas lights container -->
+    <div class="christmas-lights-container" id="christmasLightsContainer"></div>
+  </div>
+
+  <!-- Modal de premio -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalPrize">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose" aria-label="Cerrar">&times;</button>
+      <div class="modal-day" id="modalDay"></div>
+      <div class="modal-prize" id="modalPrize"></div>
+      <div class="modal-message" id="modalMessage"></div>
+      <!-- Added accept button similar to EROS style -->
+      <button class="modal-button" onclick="closeModal()">Aceptar</button>
+    </div>
+  </div>
+
+  <audio id="audio" src="assets/sound.mp3" preload="auto"></audio>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('hidden');
+      }, 2100);
+    });
+
+    function createChristmasLights() {
+      const lightsContainer = document.getElementById('christmasLightsContainer');
+      const colors = ['red', 'yellow', 'blue', 'green'];
+      
+      // Define light positions between boxes in each row
+      const lightPositions = [
+        // Between row 1 and 2
+        { top: '15%', left: '44%' },
+        { top: '15%', left: '50%' },
+        { top: '15%', left: '55%' },
+        
+        // Between row 2 and 3
+        { top: '27%', left: '40%' },
+        { top: '27%', left: '47%' },
+        { top: '27%', left: '52%' },
+        { top: '27%', left: '58%' },
+        
+        // Between row 4 and 5
+        { top: '44%', left: '33%' },
+        { top: '44%', left: '38%' },
+        { top: '44%', left: '44%' },
+        { top: '44%', left: '50%' },
+        { top: '44%', left: '55%' },
+        { top: '44%', left: '60%' },
+        { top: '44%', left: '66%' },
+        
+        // Between row 5 and 6
+        { top: '60%', left: '30%' },
+        { top: '60%', left: '34%' },
+        { top: '60%', left: '39%' },
+        { top: '60%', left: '44%' },
+        { top: '60%', left: '50%' },
+        { top: '60%', left: '55%' },
+        { top: '60%', left: '60%' },
+        { top: '60%', left: '65%' },
+        { top: '60%', left: '69%' },
+        
+        // Between row 6 and 7
+        { top: '80%', left: '30%' },
+        { top: '80%', left: '36%' },
+        { top: '80%', left: '42%' },
+        { top: '80%', left: '47%' },
+        { top: '80%', left: '51%' },
+        { top: '80%', left: '56%' },
+        { top: '80%', left: '62%' },
+        { top: '80%', left: '69%' }
+      ];
+      
+      lightPositions.forEach((pos, index) => {
+        const light = document.createElement('div');
+        light.className = `christmas-light ${colors[index % colors.length]}`;
+        light.style.top = pos.top;
+        light.style.left = pos.left;
+        light.style.animationDelay = (Math.random() * 2) + 's';
+        lightsContainer.appendChild(light);
+      });
+    }
+
+    const premios = [
+      { valor: '💸 5.000 FICHAS GRATIS', peso: 0.5, tipo: 'fichas' },
+      { valor: '🎉 2.500 FICHAS GRATIS', peso: 1, tipo: 'fichas' },
+      { valor: '🔥 BONO DEL 200%', peso: 20, tipo: 'bono' },
+      { valor: '💥 BONO DEL 150%', peso: 35, tipo: 'bono' },
+      { valor: '🎁 BONO DEL 100%', peso: 42.5, tipo: 'bono' }
+    ];
+
+    function pickWeighted(items) {
+      const totalWeight = items.reduce((sum, item) => sum + item.peso, 0);
+      let random = Math.random() * totalWeight;
+      for (const item of items) {
+        random -= item.peso;
+        if (random <= 0) return item;
+      }
+      return items[items.length - 1];
+    }
+
+    // Obtener día actual (para pruebas, puedes cambiar esto)
+    function getCurrentDay() {
+      const now = new Date();
+      // Para pruebas, descomenta la siguiente línea para simular un día específico
+      // return 15; // Simula que estamos en el día 15
+      
+      // Solo en diciembre
+      if (now.getMonth() === 11) { // Diciembre es mes 11 (0-indexed)
+        return now.getDate();
+      }
+      
+      // Para pruebas fuera de diciembre, retorna un día simulado
+      return 1; // Cambia esto para probar diferentes días
+    }
+
+    // LocalStorage para premios reclamados
+    const STORAGE_KEY = 'advent_calendar_claims_eros';
+
+    function getClaimedDays() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : {};
+    }
+
+    function saveClaim(day, prize) {
+      const claims = getClaimedDays();
+      claims[day] = {
+        prize: prize,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(claims));
+    }
+
+    function isDayClaimed(day) {
+      const claims = getClaimedDays();
+      return claims.hasOwnProperty(day);
+    }
+
+    function getClaimedPrize(day) {
+      const claims = getClaimedDays();
+      return claims[day]?.prize || null;
+    }
+
+    // Crear cajitas
+    function createBoxes() {
+      const container = document.getElementById('boxesContainer');
+      const currentDay = getCurrentDay();
+
+      for (let day = 1; day <= 25; day++) {
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.setAttribute('data-day', day);
+        
+        const isLocked = day > currentDay;
+        const isClaimed = isDayClaimed(day);
+        
+        if (isLocked) {
+          box.classList.add('locked');
+        }
+        
+        if (isClaimed) {
+          box.classList.add('claimed');
+        }
+
+        box.innerHTML = `
+          <div class="box-inner">
+            <div class="box-number">${day}</div>
+            <div class="box-icon">${isClaimed ? '✓' : (isLocked ? '🔒' : '🎁')}</div>
+          </div>
+        `;
+
+        if (!isLocked) {
+          box.addEventListener('click', () => openBox(day));
+        }
+
+        container.appendChild(box);
+      }
+    }
+
+    // Abrir cajita
+    function openBox(day) {
+      const claimed = isDayClaimed(day);
+      let prize;
+
+      if (claimed) {
+        // Mostrar premio ya reclamado
+        prize = getClaimedPrize(day);
+      } else {
+        // Generar nuevo premio
+        const selectedPrize = pickWeighted(premios);
+        prize = selectedPrize.valor;
+        saveClaim(day, prize);
+        
+        // Marcar como reclamado visualmente
+        const box = document.querySelector(`.box[data-day="${day}"]`);
+        box.classList.add('claimed');
+        box.querySelector('.box-icon').textContent = '✓';
+        
+        // Confetti
+        launchConfetti();
+        
+        // Audio
+        playAudio();
+      }
+
+      showModal(day, prize, claimed);
+    }
+
+    // Modal
+    function showModal(day, prize, alreadyClaimed) {
+      const modal = document.getElementById('modal');
+      const modalDay = document.getElementById('modalDay');
+      const modalPrize = document.getElementById('modalPrize');
+      const modalMessage = document.getElementById('modalMessage');
+
+      modalDay.textContent = `Día ${day} de Diciembre`;
+      modalPrize.textContent = prize;
+      
+      if (alreadyClaimed) {
+        modalMessage.innerHTML = '¡Ya reclamaste este premio!<br>Tu premio ha sido acreditado. Vuelve mañana por uno nuevo.';
+      } else {
+        modalMessage.innerHTML = '¡Felicitaciones!<br>Tu premio ha sido acreditado. ¡Disfrutá de este regalo especial de Club EROS!';
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.remove('active');
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal') closeModal();
+    });
+
+    // Confetti
+    function launchConfetti() {
+      const colors = ['#D4AF37', '#B4902F', '#F1D27A', '#FFEAA7', '#7A2A36'];
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+          confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 5000);
+        }, i * 30);
+      }
+    }
+
+    // Audio
+    function playAudio() {
+      const audio = document.getElementById('audio');
+      audio.play().catch(() => {
+        console.log('[v0] Audio autoplay blocked');
+      });
+    }
+
+    // Reset for pruebas (presiona R)
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'r') {
+        if (confirm('¿Reiniciar calendario? (Solo para pruebas)')) {
+          localStorage.removeItem(STORAGE_KEY);
+          location.reload();
+        }
+      }
+    });
+
+    // Inicializar
+    createBoxes();
+    createChristmasLights();
+  </script>
+
+</body>
+</html>
