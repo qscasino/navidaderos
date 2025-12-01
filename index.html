@@ -798,20 +798,27 @@
   </audio>
 
   <script>
-    // --- AUDIO Y BOTÓN DE SONIDO ---
+    // ---------------- AUDIO Y PRELOADER ----------------
     let isMusicPlaying = false;
     const backgroundMusic = document.getElementById('backgroundMusic');
     const prizeSound = document.getElementById('prizeSound');
     const soundControl = document.getElementById('soundControl');
   
-    // Preloader: se oculta después de la animación
+    // Cuando la página termina de cargar
     window.addEventListener('load', () => {
       setTimeout(() => {
         const preloader = document.getElementById('preloader');
-        if (preloader) preloader.classList.add('hidden');
+        if (preloader) {
+          preloader.classList.add('hidden');   // 👈 esto saca la pantalla de carga
+        }
   
-        if (soundControl) soundControl.textContent = '🔇'; // arranca en mute
-        if (backgroundMusic) backgroundMusic.volume = 0.7; // opcional
+        if (backgroundMusic) {
+          backgroundMusic.volume = 0.7;        // volumen más bajo
+        }
+  
+        if (soundControl) {
+          soundControl.textContent = '🔇';     // empieza mute
+        }
       }, 2100);
     });
   
@@ -838,11 +845,12 @@
     if (soundControl) {
       soundControl.addEventListener('click', toggleBackgroundMusic);
     }
-
+  
+    // ---------------- LUCES DE NAVIDAD ----------------
     function createChristmasLights() {
       const lightsContainer = document.getElementById('christmasLightsContainer');
       const colors = ['red', 'yellow', 'blue', 'green'];
-      
+  
       const lightPositions = [
         { top: '15%', left: '44%' },
         { top: '15%', left: '50%' },
@@ -876,7 +884,7 @@
         { top: '80%', left: '62%' },
         { top: '80%', left: '69%' }
       ];
-      
+  
       lightPositions.forEach((pos, index) => {
         const light = document.createElement('div');
         light.className = `christmas-light ${colors[index % colors.length]}`;
@@ -886,7 +894,8 @@
         lightsContainer.appendChild(light);
       });
     }
-
+  
+    // ---------------- PREMIOS Y CALENDARIO ----------------
     const dailyPrizes = {
       1: '🎁 BONO DEL 100%',
       2: '🎁 BONO DEL 50%',
@@ -914,26 +923,26 @@
       24: '🎉 2.500 FICHAS GRATIS',
       25: '💸 5.000 FICHAS GRATIS'
     };
-
+  
     function getCurrentDay() {
       const now = new Date();
-      
-      // Only in December
-      if (now.getMonth() === 11) {
-        return now.getDate();
-      }
-      
-      // For testing outside December, return day 1
-      return 1;
+      if (now.getMonth() === 11) return now.getDate(); // diciembre
+      return 1; // para probar fuera de diciembre
     }
-
+  
     const STORAGE_KEY = 'advent_calendar_claims_arkana';
-
+  
     function getClaimedDays() {
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : {};
+      try {
+        return data ? JSON.parse(data) : {};
+      } catch (e) {
+        console.log('Error parseando localStorage, lo reseteo:', e);
+        localStorage.removeItem(STORAGE_KEY);
+        return {};
+      }
     }
-
+  
     function saveClaim(day, prize) {
       const claims = getClaimedDays();
       claims[day] = {
@@ -942,111 +951,118 @@
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(claims));
     }
-
+  
     function isDayClaimed(day) {
       const claims = getClaimedDays();
       return claims.hasOwnProperty(day);
     }
-
+  
     function getClaimedPrize(day) {
       const claims = getClaimedDays();
       return claims[day]?.prize || null;
     }
-
+  
     function createBoxes() {
       const container = document.getElementById('boxesContainer');
       const currentDay = getCurrentDay();
-
+  
       for (let day = 1; day <= 25; day++) {
         const box = document.createElement('div');
         box.className = 'box';
         box.setAttribute('data-day', day);
-        
-        const isLocked = day !== currentDay;
-        const isClaimed = isDayClaimed(day);
-        
-        if (isLocked) {
-          box.classList.add('locked');
-        }
-        
-        if (isClaimed) {
-          box.classList.add('claimed');
-        }
-
+  
+        const locked = day !== currentDay;
+        const claimed = isDayClaimed(day);
+  
+        if (locked) box.classList.add('locked');
+        if (claimed) box.classList.add('claimed');
+  
         box.innerHTML = `
           <div class="box-inner">
             <div class="box-number">${day}</div>
-            <div class="box-icon">${isClaimed ? '✓' : (isLocked ? '🔒' : '🎁')}</div>
+            <div class="box-icon">${claimed ? '✓' : (locked ? '🔒' : '🎁')}</div>
           </div>
         `;
-
-        if (!isLocked) {
+  
+        if (!locked) {
           box.addEventListener('click', () => openBox(day));
         }
-
+  
         container.appendChild(box);
       }
     }
-
+  
     function openBox(day) {
       const claimed = isDayClaimed(day);
       let prize;
-
+  
       if (claimed) {
         prize = getClaimedPrize(day);
       } else {
         prize = dailyPrizes[day];
         saveClaim(day, prize);
-        
+  
         const box = document.querySelector(`.box[data-day="${day}"]`);
-        box.classList.add('claimed');
-        box.querySelector('.box-icon').textContent = '✓';
-        
+        if (box) {
+          box.classList.add('claimed');
+          box.querySelector('.box-icon').textContent = '✓';
+        }
+  
         launchConfetti();
-        
-        if (isMusicPlaying) {
+  
+        if (isMusicPlaying && backgroundMusic) {
           backgroundMusic.pause();
         }
-        prizeSound.play().catch(() => {
-          console.log('[v0] Prize sound failed to play');
-        });
+  
+        if (prizeSound) {
+          prizeSound.play().catch(() => {
+            console.log('[v0] Prize sound failed to play');
+          });
+        }
       }
-
+  
       showModal(day, prize, claimed);
     }
-
+  
     function showModal(day, prize, alreadyClaimed) {
       const modal = document.getElementById('modal');
       const modalDay = document.getElementById('modalDay');
       const modalPrize = document.getElementById('modalPrize');
       const modalMessage = document.getElementById('modalMessage');
-
+  
       modalDay.textContent = `Día ${day} de Diciembre`;
       modalPrize.textContent = prize;
-      
+  
       if (alreadyClaimed) {
         modalMessage.innerHTML = '¡Ya reclamaste este premio!<br>Tu premio ha sido acreditado. Vuelve mañana por uno nuevo.';
       } else {
         modalMessage.innerHTML = '¡Felicitaciones!<br>Tu premio ha sido acreditado. ¡Disfrutá de este regalo especial!';
       }
-
+  
       modal.classList.add('active');
     }
-
+  
     function closeModal() {
       const modal = document.getElementById('modal');
       modal.classList.remove('active');
-      
-      if (isMusicPlaying) {
-        backgroundMusic.play();
+  
+      if (isMusicPlaying && backgroundMusic) {
+        backgroundMusic.play().catch(() => {});
       }
     }
-
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    document.getElementById('modal').addEventListener('click', (e) => {
-      if (e.target.id === 'modal') closeModal();
-    });
-
+  
+    const modalCloseBtn = document.getElementById('modalClose');
+    if (modalCloseBtn) {
+      modalCloseBtn.addEventListener('click', closeModal);
+    }
+  
+    const modalOverlay = document.getElementById('modal');
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target.id === 'modal') closeModal();
+      });
+    }
+  
     function launchConfetti() {
       const colors = ['#FFD700', '#C5A028', '#F4E4C1', '#C41E3A', '#FFFFFF'];
       for (let i = 0; i < 100; i++) {
@@ -1058,15 +1074,17 @@
           confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
           confetti.style.animationDelay = (Math.random() * 0.5) + 's';
           document.body.appendChild(confetti);
-          
+  
           setTimeout(() => confetti.remove(), 5000);
         }, i * 30);
       }
     }
-
+  
+    // Inicializar árbol y luces
     createBoxes();
     createChristmasLights();
   </script>
+
 
 </body>
 </html>
