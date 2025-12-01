@@ -798,14 +798,26 @@
   </audio>
 
   <script>
+    // --- AUDIO Y BOTÓN DE SONIDO ---
     let isMusicPlaying = false;
     const backgroundMusic = document.getElementById('backgroundMusic');
     const prizeSound = document.getElementById('prizeSound');
     const soundControl = document.getElementById('soundControl');
-    
-    backgroundMusic.volume = 0.7; // opcional
-    
+  
+    // Preloader: se oculta después de la animación
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) preloader.classList.add('hidden');
+  
+        if (soundControl) soundControl.textContent = '🔇'; // arranca en mute
+        if (backgroundMusic) backgroundMusic.volume = 0.7; // opcional
+      }, 2100);
+    });
+  
     function toggleBackgroundMusic() {
+      if (!backgroundMusic || !soundControl) return;
+  
       if (isMusicPlaying) {
         backgroundMusic.pause();
         soundControl.textContent = '🔇';
@@ -822,32 +834,10 @@
           });
       }
     }
-    
-    soundControl.addEventListener('click', toggleBackgroundMusic);
-    function startBackgroundMusic() {
-      backgroundMusic.play().then(() => {
-        isMusicPlaying = true;
-        soundControl.textContent = '🔊';
-      }).catch(() => {
-        console.log('[v0] Audio autoplay blocked - user interaction required');
-        isMusicPlaying = false;
-        soundControl.textContent = '🔇';
-      });
+  
+    if (soundControl) {
+      soundControl.addEventListener('click', toggleBackgroundMusic);
     }
-
-    function toggleBackgroundMusic() {
-      if (isMusicPlaying) {
-        backgroundMusic.pause();
-        soundControl.textContent = '🔇';
-        isMusicPlaying = false;
-      } else {
-        backgroundMusic.play();
-        soundControl.textContent = '🔊';
-        isMusicPlaying = true;
-      }
-    }
-
-    soundControl.addEventListener('click', toggleBackgroundMusic);
 
     function createChristmasLights() {
       const lightsContainer = document.getElementById('christmasLightsContainer');
